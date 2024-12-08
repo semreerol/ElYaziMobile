@@ -36,14 +36,13 @@ class MainActivity : ComponentActivity() {
                     composable("user") { UserScreen(navController) }
                     composable("register") { RegisterScreen(navController) }
                     composable("yazi") { YaziScreen(navController) }
+                    composable("converter") { ConverterScrenn() }
                 }
             }
         }
     }
 
-    private fun RegisterScreen(navController: NavHostController) {
-        TODO("Not yet implemented")
-    }
+
 }
 
 @Composable

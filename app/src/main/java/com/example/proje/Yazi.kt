@@ -112,8 +112,22 @@ fun YaziScreen(navController: NavController) {
                     },
                     modifier = Modifier.weight(1f) // Buton genişliği için ağırlık verildi
                 ) {
-                    Text(text = "Fotoğraf Yükle")
+                    Text(text = "Belgelerden Yükle")
                 }
+            }
+        }
+
+        // Sağ alt kısımda buton
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            contentAlignment = Alignment.BottomEnd
+        ) {
+            Button(onClick = {
+                navController.navigate("converter") // "converter" route'u tanımlanmış olmalı
+            }) {
+                Text(text = "Converter'a Git")
             }
         }
     }

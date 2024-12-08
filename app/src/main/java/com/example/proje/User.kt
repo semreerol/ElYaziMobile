@@ -26,7 +26,7 @@ fun UserScreen(navController: NavController) {
     ) {
         // Arka plan resmi
         Image(
-            painter = painterResource(id = R.drawable.loggin), // background.jpg dosyasını drawable içine koyduğunuzdan emin olun
+            painter = painterResource(id = R.drawable.blue), // background.jpg dosyasını drawable içine koyduğunuzdan emin olun
             contentDescription = "Background",
             contentScale = ContentScale.Crop, // Görüntüyü kırpmak için
             modifier = Modifier.fillMaxSize()
