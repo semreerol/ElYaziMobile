@@ -1,4 +1,5 @@
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,9 +14,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.proje.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
-fun UserScreen(navController: NavController) {
+fun LoginScreen(navController: NavController) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
@@ -26,13 +34,12 @@ fun UserScreen(navController: NavController) {
     ) {
         // Arka plan resmi
         Image(
-            painter = painterResource(id = R.drawable.blue), // background.jpg dosyasını drawable içine koyduğunuzdan emin olun
+            painter = painterResource(id = R.drawable.blue),
             contentDescription = "Background",
-            contentScale = ContentScale.Crop, // Görüntüyü kırpmak için
+            contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
 
-        // İçerik
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -66,7 +73,10 @@ fun UserScreen(navController: NavController) {
 
             Button(
                 onClick = {
-                    loginUser(username, password, navController, context)
+                    // CoroutineScope ile giriş işlemini başlat
+                    CoroutineScope(Dispatchers.IO).launch {
+                        loginUser(username, password, navController, context)
+                    }
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -77,7 +87,7 @@ fun UserScreen(navController: NavController) {
 
             Button(
                 onClick = {
-                    navController.navigate("register") // "register" rotasına yönlendirme
+                    navController.navigate("register")
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -88,7 +98,7 @@ fun UserScreen(navController: NavController) {
 
             Button(
                 onClick = {
-                    navController.navigate("yazi") // "yazi" ekranına yönlendirme
+                    navController.navigate("yazi")
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -100,4 +110,30 @@ fun UserScreen(navController: NavController) {
 
 fun loginUser(username: String, password: String, navController: NavController, context: Context) {
 
+    val client = OkHttpClient()
+    val requestBody = """{"username":"$username","password":"$password"}""".toRequestBody()
+    val request = Request.Builder()
+        .url("http://10.0.2.2:5138/api/User/login") // Yerel makine IP adresinizi kullanın
+        .post(requestBody)
+        .addHeader("Content-Type", "application/json")
+        .build()
+
+    try {
+        val response = client.newCall(request).execute()
+        if (response.isSuccessful) {
+            // UI değişikliklerini ana thread'de yapmak için Dispatchers.Main kullanılıyor
+            CoroutineScope(Dispatchers.Main).launch {
+                Toast.makeText(context, "Giriş başarılı!", Toast.LENGTH_SHORT).show()
+                navController.navigate("write") // Başarılı girişte yönlendirme
+            }
+        } else {
+            CoroutineScope(Dispatchers.Main).launch {
+                Toast.makeText(context, "Kullanıcı adı veya şifre hatalı!", Toast.LENGTH_SHORT).show()
+            }
+        }
+    } catch (e: Exception) {
+        CoroutineScope(Dispatchers.Main).launch {
+            Toast.makeText(context, "Bir hata oluştu: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+    }
 }

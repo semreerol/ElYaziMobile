@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 @Composable
-fun YaziScreen(navController: NavController) {
+fun WriteScreen(navController: NavController) {
     var hasCameraPermission by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -125,7 +125,7 @@ fun YaziScreen(navController: NavController) {
             contentAlignment = Alignment.BottomEnd
         ) {
             Button(onClick = {
-                navController.navigate("converter") // "converter" route'u tanımlanmış olmalı
+                navController.navigate("translate") // "converter" route'u tanımlanmış olmalı
             }) {
                 Text(text = "Converter'a Git")
             }

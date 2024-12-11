@@ -1,6 +1,6 @@
 package com.example.proje
 
-import UserScreen
+import LoginScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -33,10 +33,10 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = "giris") {
                     composable("giris") { GirisScreen(navController) }
-                    composable("user") { UserScreen(navController) }
+                    composable("login") { LoginScreen(navController) }
                     composable("register") { RegisterScreen(navController) }
-                    composable("yazi") { YaziScreen(navController) }
-                    composable("converter") { ConverterScrenn() }
+                    composable("write") { WriteScreen(navController) }
+                    composable("translate") { TranslateScrenn() }
                 }
             }
         }
@@ -71,7 +71,7 @@ fun GirisScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = { navController.navigate("user") },
+                onClick = { navController.navigate("login") },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Kullanıcı Girişi")
